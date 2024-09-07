@@ -118,9 +118,9 @@ struct Person: Automotive, CustomStringConvertible {
 }
 
 func main() {
+    let start = "Z"
+    let goal = "S"
     if #available(macOS 13, *) {
-        let start = "Z"
-        let goal = "S"
         let clock = ContinuousClock()
         let time = clock.measure {
             bfsTsa(graph: romania, start: start, goal: goal)
