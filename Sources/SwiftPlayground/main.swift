@@ -117,15 +117,42 @@ struct Person: Automotive, CustomStringConvertible {
     }
 }
 
+@resultBuilder
+struct VecBuilder<T> {
+    static func buildBlock(_ components: T...) -> [T] {
+        var array: [T] = []
+        array.append(contentsOf: components)
+        return array
+    }
+    static func buildArray(_ components: [T]) -> [T] {
+        var array: [T] = []
+        array.append(contentsOf: components)
+        return array
+    }
+}
+
+func Vec<T>(@VecBuilder<T> contents: ()->[T]) -> [T] {
+    return contents()
+}
+
+func customIf(condition: Bool, then: () -> (), _ otherwise: (() -> ())?) {
+    if condition {
+        then()
+    } else if let otherwise = otherwise {
+        otherwise()
+    }
+}
+
 func main() {
-    let start = "Z"
-    let goal = "S"
+    let start = "A"
+    let goal = "B"
+    var (cost, path) = (0, "")
     if #available(macOS 13, *) {
         let clock = ContinuousClock()
         let time = clock.measure {
-            bfsTsa(graph: romania, start: start, goal: goal)
+            (cost, path) = ucsGsa(graph: costly_romania.mapValues {value in value.map {node in Node(cost: node.0, name: node.1)}}, start: start, goal: goal)
         }
-        print("Found \(goal) in \(time)")
+        print("Found path \(path) for cost \(cost) in \(time)")
     }
     //let j = Point()
     //let p = Point(x: 3, y: 4)
